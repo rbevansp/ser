@@ -17,7 +17,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 
 @main.command()
 def train(
-    name: str = typer.Option(
+    name : str = typer.Option(
         ..., "-n", "--name", help="Name of experiment to save under."
     ),
     epochs: int = typer.Option(
