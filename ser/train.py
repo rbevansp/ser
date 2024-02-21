@@ -1,9 +1,6 @@
 import torch
-from torch import optim
 from torch.nn import functional as F 
-from torch.utils.data import DataLoader
-from model import Net
-from data import prepare_data
+
 
 def train(model, optimizer, training_dataloader, validation_dataloader, epochs, device):
     """Train the model."""
