@@ -27,7 +27,7 @@ def train(
         ..., "-b", "--batch", help="Batch size for training."
     ),
     learning_rate: float = typer.Option(
-      0.01, "-l", "--learning", "Learning rate for training."  
+      0.01, "-l", "--learning", help = "Learning rate for training."  
     )
 ):
     print(f"Running experiment: {name}\n"
