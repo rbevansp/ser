@@ -39,3 +39,4 @@ def validate_model(model, validation_dataloader, epoch, device):
         print(
             f"Val Epoch: {epoch} | Avg Loss: {val_loss:.4f} | Accuracy: {val_acc}"
         )
+        return epoch, val_loss, val_acc

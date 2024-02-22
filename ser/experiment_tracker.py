@@ -2,12 +2,13 @@ import datetime
 import json
 
 def experiment_tracker(DATA_DIR, name, epochs, batch_size, learning_rate, epoch, val_loss, val_acc):
-    experiment_dir = DATA_DIR / "results" / name + "_" + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    experiment_dir = DATA_DIR / "results" / str(name + "_" + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
     hyperparams_dir = experiment_dir / "hyperparams"
     output_dir = experiment_dir / "output"
 
     # Create directories if they don't exist
     hyperparams_dir.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     ## Making the hyperparameter & output files files
     hyperparameters_dict = {
