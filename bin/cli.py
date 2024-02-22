@@ -1,5 +1,6 @@
 from datetime import datetime
 from pathlib import Path
+from typing_extensions import Annotated
 
 import typer
 import torch
@@ -10,9 +11,9 @@ from ser.constants import RESULTS_DIR
 from ser.data import train_dataloader, val_dataloader, test_dataloader
 from ser.params import Params, save_params
 from ser.transforms import transforms, normalize
+from ser.inference import run_infer
 
 main = typer.Typer()
-
 
 @main.command()
 def train(
@@ -43,6 +44,7 @@ def train(
     fmt = "%Y-%m-%dT%H-%M"
     timestamp = datetime.strftime(datetime.utcnow(), fmt)
     run_path = RESULTS_DIR / name / timestamp
+    print(run_path)
     run_path.mkdir(parents=True, exist_ok=True)
 
     # Save parameters for the run
@@ -59,45 +61,5 @@ def train(
 
 
 @main.command()
-def infer():
-    run_path = Path("./path/to/one/of/your/training/runs")
-    label = 6
-
-    # select image to run inference for
-    dataloader = test_dataloader(1, transforms(normalize))
-    images, labels = next(iter(dataloader))
-    while labels[0].item() != label:
-        images, labels = next(iter(dataloader))
-
-    # load the model
-    model = torch.load(run_path / "model.pt")
-
-    # run inference
-    model.eval()
-    output = model(images)
-    pred = output.argmax(dim=1, keepdim=True)[0].item()
-    confidence = max(list(torch.exp(output)[0]))
-    pixels = images[0][0]
-    print(generate_ascii_art(pixels))
-    print(f"This is a {pred}")
-
-
-def generate_ascii_art(pixels):
-    ascii_art = []
-    for row in pixels:
-        line = []
-        for pixel in row:
-            line.append(pixel_to_char(pixel))
-        ascii_art.append("".join(line))
-    return "\n".join(ascii_art)
-
-
-def pixel_to_char(pixel):
-    if pixel > 0.99:
-        return "O"
-    elif pixel > 0.9:
-        return "o"
-    elif pixel > 0:
-        return "."
-    else:
-        return " "
+def infer(run_path: str = typer.Option(..., "-p", "--runpath", help = "Path to the run to load the model from.")):
+    run_infer(run_path)
