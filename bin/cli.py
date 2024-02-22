@@ -6,6 +6,7 @@ from torchvision import datasets, transforms
 from ser.model import Net
 from ser.train import train as train_model, validate_model
 from ser.data import prepare_data
+from ser.experiment_tracker import experiment_tracker
 
 import typer
 
@@ -13,6 +14,10 @@ main = typer.Typer()
 
 PROJECT_ROOT = Path(__file__).parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
+
+# Create directories
+    
+
 
 
 @main.command()
@@ -51,7 +56,9 @@ def train(
     # train
     train_model(model, optimizer, training_dataloader, validation_dataloader, epochs, device)
 
-    validate_model(model, validation_dataloader, epochs, device)
+    epoch, val_loss, val_acc = validate_model(model, validation_dataloader, epochs, device)
+
+    experiment_tracker(DATA_DIR, name, epochs, batch_size, learning_rate, epoch, val_loss, val_acc)
 
 
 @main.command()
